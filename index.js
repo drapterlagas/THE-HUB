@@ -1,3 +1,4 @@
+// ...top imports remain the same...
 import {
   makeWASocket,
   useMultiFileAuthState,
@@ -12,7 +13,6 @@ import dotenv from 'dotenv';
 import express from 'express';
 import { fileURLToPath } from 'url';
 
-import { Handler } from './data/index.js';
 import { downloadSession } from './lib/mega.js';
 import { loadPlugins } from './lib/plugin-loader.js';
 
@@ -21,7 +21,6 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables
 const SESSION_ID = process.env.SESSION_ID || '';
 const PREFIX = process.env.PREFIX || '*';
 const OWNER_NUMBER = process.env.OWNER_NUMBER || '';
@@ -31,7 +30,6 @@ const AUTO_STATUS_SEEN = process.env.AUTO_STATUS_SEEN === 'true';
 const sessionPath = path.join(__dirname, 'session');
 const logger = pino({ level: 'silent' });
 
-// Express server for keeping alive
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.get('/', (_, res) => res.send('🟢 THE-HUB bot is running.'));
@@ -71,13 +69,7 @@ async function startBot() {
     }
   };
 
-  // Command/message handling
-  Handler(sock, {
-    prefix: PREFIX,
-    owner: OWNER_NUMBER
-  });
-
-  await loadPlugins(sock, './popkid'); // assuming popkid contains commands
+  await loadPlugins(sock, './popkid'); // plugin loader
 
   if (AUTO_BIO) {
     setInterval(() => {
@@ -98,3 +90,4 @@ async function startBot() {
 }
 
 startBot();
+  
